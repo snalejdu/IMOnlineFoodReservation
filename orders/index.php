@@ -16,72 +16,489 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Orders - Food Ordering System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f4f4; }
-        .container { max-width: 1400px; margin: 20px auto; padding: 20px; }
-        .content-card { background: white; border-radius: 10px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
-        .btn { padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease; }
-        .btn-primary { background: #28a745; color: white; }
-        .btn-primary:hover { background: #218838; transform: translateY(-2px); }
-        .btn-warning { background: #ffc107; color: #333; }
-        .btn-warning:hover { background: #e0a800; }
-        .btn-danger { background: #dc3545; color: white; }
-        .btn-danger:hover { background: #c82333; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background: #667eea; color: white; font-weight: 600; }
-        tr:hover { background: #f5f5f5; }
-        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; display: inline-block; }
-        .status-pending { background: #ffc107; color: #333; }
-        .status-preparing { background: #17a2b8; color: white; }
-        .status-delivered { background: #28a745; color: white; }
-        .status-cancelled { background: #dc3545; color: white; }
-        .action-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
-        .search-box { padding: 10px; width: 300px; border: 1px solid #ddd; border-radius: 5px; }
-        .stats { background: #e9ecef; padding: 10px 15px; border-radius: 5px; margin-bottom: 20px; }
+        :root {
+            --bg-base: #0a0a0f;
+            --bg-card: #111118;
+            --bg-elevated: #1a1a26;
+            --bg-hover: #1e1e2e;
+            --violet: #7c3aed;
+            --violet-light: #a78bfa;
+            --violet-glow: rgba(124,58,237,0.18);
+            --violet-border: rgba(124,58,237,0.35);
+            --text-primary: #f0eeff;
+            --text-secondary: #a39fc4;
+            --text-muted: #5e5a7a;
+            --border: rgba(255,255,255,0.07);
+            --border-accent: rgba(124,58,237,0.4);
+            --green: #22c55e;
+            --red: #ef4444;
+            --amber: #f59e0b;
+            --blue: #3b82f6;
+            --cyan: #06b6d4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-base);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Background grid texture */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: linear-gradient(rgba(124,58,237,0.03) 1px, transparent 1px), 
+                              linear-gradient(90deg, rgba(124,58,237,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .page-wrap {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        /* Page header */
+        .page-header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .page-title-group h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .page-title-group p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Stat pills */
+        .stats-container {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .stat-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--violet-glow);
+            border: 1px solid var(--violet-border);
+            border-radius: 999px;
+            padding: 6px 16px;
+            font-size: 13px;
+            color: var(--violet-light);
+            font-weight: 500;
+        }
+
+        .stat-pill .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--violet-light);
+        }
+
+        .stat-pill.total {
+            background: var(--violet-glow);
+            border-color: var(--violet-border);
+        }
+
+        /* Button */
+        .btn-add {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--violet);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-add:hover {
+            background: #6d28d9;
+            transform: translateY(-1px);
+        }
+
+        /* Toolbar */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .search-wrap {
+            position: relative;
+            flex: 1;
+            max-width: 320px;
+        }
+
+        .search-wrap svg {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 15px;
+            height: 15px;
+            color: var(--text-muted);
+        }
+
+        .search-input {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 9px 12px 9px 36px;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.2s;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-input:focus {
+            border-color: var(--violet);
+        }
+
+        /* Card / Table */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        thead tr {
+            background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border-accent);
+        }
+
+        th {
+            padding: 13px 16px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--violet-light);
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 14px 16px;
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover td {
+            background: var(--bg-hover);
+        }
+
+        /* ID badge */
+        .id-badge {
+            display: inline-block;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: 2px 8px;
+            font-size: 12px;
+            color: var(--text-muted);
+            font-family: monospace;
+        }
+
+        /* Customer name */
+        .customer-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        /* Item name */
+        .item-name {
+            color: var(--violet-light);
+            font-weight: 500;
+        }
+
+        /* Price amount */
+        .price-amount {
+            font-weight: 600;
+            color: var(--green);
+            font-family: monospace;
+            font-size: 13px;
+        }
+
+        /* Status badges */
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+        }
+
+        .badge-pending {
+            background: rgba(245, 158, 11, 0.12);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.25);
+        }
+
+        .badge-preparing {
+            background: rgba(6, 182, 212, 0.12);
+            color: #22d3ee;
+            border: 1px solid rgba(6, 182, 212, 0.25);
+        }
+
+        .badge-delivered {
+            background: rgba(34, 197, 94, 0.12);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.25);
+        }
+
+        .badge-cancelled {
+            background: rgba(239, 68, 68, 0.12);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.25);
+        }
+
+        /* Date text */
+        .date-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-family: monospace;
+        }
+
+        /* Action buttons */
+        .actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn-icon {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.15s;
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+
+        .btn-edit {
+            background: rgba(59, 130, 246, 0.1);
+            color: #60a5fa;
+            border-color: rgba(59, 130, 246, 0.2);
+        }
+
+        .btn-edit:hover {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-delete {
+            background: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .btn-delete:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 24px;
+        }
+
+        .empty-state p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .empty-state a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--violet);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .empty-state a:hover {
+            background: #6d28d9;
+            transform: translateY(-1px);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-base);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--violet);
+            border-radius: 3px;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .container { padding: 10px; }
-            .header-actions { flex-direction: column; align-items: stretch; }
-            .search-box { width: 100%; }
-            table { font-size: 12px; }
-            th, td { padding: 8px; }
+            .page-wrap {
+                padding: 20px 16px;
+            }
+
+            .page-title-group h1 {
+                font-size: 20px;
+            }
+
+            .stats-container {
+                width: 100%;
+            }
+
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-wrap {
+                max-width: 100%;
+            }
         }
     </style>
 </head>
 <body>
     <?php include_once dirname(__DIR__) . '/includes/navigation.php'; ?>
     
-    <div class="container">
+    <div class="page-wrap">
         <?php getBreadcrumb(); ?>
         
-        <div class="content-card">
-            <div class="header-actions">
-                <h2>🛒 Orders Management</h2>
-                <div>
-                    <a href="create.php" class="btn btn-primary">➕ Place New Order</a>
-                </div>
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="page-title-group">
+                <h1>Orders Management</h1>
+                <p>Track and manage all customer orders</p>
             </div>
-            
-            <div class="stats">
-                <strong>Total Orders:</strong> <?= count($orders) ?>
+            <a href="create.php" class="btn-add">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M12 5v14M5 12h14"/>
+                </svg>
+                Place New Order
+            </a>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-container">
+            <span class="stat-pill total">
+                <span class="dot"></span>
+                Total Orders: <?= count($orders) ?>
+            </span>
+            <?php
+            $pending = count(array_filter($orders, fn($o) => $o['order_status'] == 'pending'));
+            $preparing = count(array_filter($orders, fn($o) => $o['order_status'] == 'preparing'));
+            $delivered = count(array_filter($orders, fn($o) => $o['order_status'] == 'delivered'));
+            $cancelled = count(array_filter($orders, fn($o) => $o['order_status'] == 'cancelled'));
+            ?>
+            <span class="stat-pill">⏳ Pending: <?= $pending ?></span>
+            <span class="stat-pill">🔪 Preparing: <?= $preparing ?></span>
+            <span class="stat-pill">✅ Delivered: <?= $delivered ?></span>
+            <span class="stat-pill">❌ Cancelled: <?= $cancelled ?></span>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <div class="search-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.35-4.35"/>
+                </svg>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search orders by customer, item, or status..." onkeyup="searchTable()">
             </div>
-            
-            <input type="text" class="search-box" placeholder="🔍 Search orders..." id="searchInput" onkeyup="searchTable()">
-            
-            <div style="overflow-x: auto;">
+        </div>
+
+        <!-- Table Card -->
+        <div class="card">
+            <div class="table-wrap">
                 <table>
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>Order ID</th>
                             <th>Customer</th>
                             <th>Item</th>
                             <th>Quantity</th>
-                            <th>Total</th>
+                            <th>Total Amount</th>
                             <th>Status</th>
                             <th>Order Date</th>
                             <th>Actions</th>
@@ -90,27 +507,61 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <tbody id="dataTable">
                         <?php if(count($orders) > 0): ?>
                             <?php foreach($orders as $order): ?>
-                            <tr>
-                                <td>#<?= $order['order_id'] ?></td>
-                                <td><strong><?= htmlspecialchars($order['customer_name']) ?></strong></td>
-                                <td><?= htmlspecialchars($order['item_name']) ?></td>
-                                <td><?= $order['quantity'] ?></td>
-                                <td><strong>$<?= number_format($order['total_amount'], 2) ?></strong></td>
-                                <td>
-                                    <span class="status-badge status-<?= $order['order_status'] ?>">
-                                        <?= ucfirst($order['order_status']) ?>
-                                    </span>
-                                </td>
-                                <td><?= date('M d, Y h:i A', strtotime($order['order_date'])) ?></td>
-                                <td class="action-buttons">
-                                    <a href="edit.php?id=<?= $order['order_id'] ?>" class="btn btn-warning">✏️ Edit</a>
-                                    <a href="delete.php?id=<?= $order['order_id'] ?>" class="btn btn-danger" onclick="return confirm('Are you sure?')">🗑️ Delete</a>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td><span class="id-badge">#<?= $order['order_id'] ?></span></td>
+                                    <td><span class="customer-name"><?= htmlspecialchars($order['customer_name']) ?></span></td>
+                                    <td><span class="item-name"><?= htmlspecialchars($order['item_name']) ?></span></td>
+                                    <td><?= $order['quantity'] ?></td>
+                                    <td><span class="price-amount">$<?= number_format($order['total_amount'], 2) ?></span></td>
+                                    <td>
+                                        <span class="badge badge-<?= $order['order_status'] ?>">
+                                            <?php
+                                            $statusIcons = [
+                                                'pending' => '⏳',
+                                                'preparing' => '🔪',
+                                                'delivered' => '✅',
+                                                'cancelled' => '❌'
+                                            ];
+                                            echo ($statusIcons[$order['order_status']] ?? '📦') . ' ' . ucfirst($order['order_status']);
+                                            ?>
+                                        </span>
+                                    </td>
+                                    <td><span class="date-text"><?= date('M d, Y h:i A', strtotime($order['order_date'])) ?></span></td>
+                                    <td>
+                                        <div class="actions">
+                                            <a href="edit.php?id=<?= $order['order_id'] ?>" class="btn-icon btn-edit">
+                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                                </svg>
+                                                Edit
+                                            </a>
+                                            <a href="delete.php?id=<?= $order['order_id'] ?>" class="btn-icon btn-delete" onclick="return confirm('Delete this order? This action cannot be undone.')">
+                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                    <polyline points="3 6 5 6 21 6"/>
+                                                    <path d="M19 6l-1 14H6L5 6"/>
+                                                    <path d="M10 11v6M14 11v6"/>
+                                                    <path d="M9 6V4h6v2"/>
+                                                </svg>
+                                                Delete
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="8" style="text-align: center;">No orders found. <a href="create.php">Place your first order</a></td>
+                                <td colspan="8">
+                                    <div class="empty-state">
+                                        <p>📭 No orders found yet.</p>
+                                        <a href="create.php">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                <path d="M12 5v14M5 12h14"/>
+                                            </svg>
+                                            Place First Order
+                                        </a>
+                                    </div>
+                                </td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
@@ -118,30 +569,16 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
     </div>
-    
+
     <script>
         function searchTable() {
-            var input, filter, table, tr, td, i, txtValue;
-            input = document.getElementById("searchInput");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("dataTable");
-            tr = table.getElementsByTagName("tr");
+            const filter = document.getElementById('searchInput').value.toUpperCase();
+            const rows = document.querySelectorAll('#dataTable tr');
             
-            for (i = 0; i < tr.length; i++) {
-                var found = false;
-                var tds = tr[i].getElementsByTagName("td");
-                for (var j = 0; j < tds.length; j++) {
-                    var td = tds[j];
-                    if (td) {
-                        txtValue = td.textContent || td.innerText;
-                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                            found = true;
-                            break;
-                        }
-                    }
-                }
-                tr[i].style.display = found ? "" : "none";
-            }
+            rows.forEach(row => {
+                const text = row.textContent.toUpperCase();
+                row.style.display = text.includes(filter) ? '' : 'none';
+            });
         }
     </script>
 </body>

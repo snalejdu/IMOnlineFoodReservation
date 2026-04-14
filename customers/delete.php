@@ -1,25 +1,28 @@
 <?php
 require_once dirname(__DIR__) . '/config/database.php';
 
-$database = new Database();
-$db = $database->getConnection();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-$id = isset($_GET['id']) ? $_GET['id'] : die('Customer ID required');
+    if (!isset($_POST['id']) || empty($_POST['id'])) {
+        die("Invalid request.");
+    }
 
-// Delete the customer
-$query = "DELETE FROM customers WHERE customer_id = :id";
-$stmt = $db->prepare($query);
-$stmt->bindParam(':id', $id);
+    $id = intval($_POST['id']);
 
-if ($stmt->execute()) {
-    // Redirect back to index page
-    header("Location: index.php");
-    exit();
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $query = "DELETE FROM customers WHERE customer_id = :id";
+    $stmt = $db->prepare($query);
+
+    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+    if ($stmt->execute()) {
+        header("Location: index.php?success=deleted");
+        exit;
+    } else {
+        echo "Failed to delete.";
+    }
 } else {
-    // If delete fails, still redirect but with error message in session
-    session_start();
-    $_SESSION['error'] = "Error deleting customer";
-    header("Location: index.php");
-    exit();
+    echo "Invalid request method.";
 }
-?>

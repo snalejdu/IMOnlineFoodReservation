@@ -8,133 +8,133 @@ include_once 'includes/navigation.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Food Ordering System - Welcome</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        
-        .hero {
-            text-align: center;
-            padding: 60px 20px;
-            color: white;
-        }
-        
-        .hero h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
-            animation: fadeInDown 1s ease;
-        }
-        
-        .hero p {
-            font-size: 20px;
-            margin-bottom: 30px;
-            animation: fadeInUp 1s ease;
-        }
-        
-        .features-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-        
-        .feature-card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
-            animation: fadeIn 1s ease;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        
-        .feature-icon {
-            font-size: 48px;
-            margin-bottom: 20px;
-        }
-        
-        .feature-card h3 {
-            color: #667eea;
-            margin-bottom: 15px;
-            font-size: 24px;
-        }
-        
-        .feature-card p {
-            color: #666;
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-        
-        .feature-btn {
-            display: inline-block;
-            padding: 10px 25px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 25px;
-            transition: transform 0.3s;
-        }
-        
-        .feature-btn:hover {
-            transform: scale(1.05);
-        }
-        
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 32px;
-            }
-            
-            .hero p {
-                font-size: 16px;
-            }
-        }
-    </style>
+   <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-main: #0b0b12;
+    --card-bg: #141420;
+    --card-hover: #1c1c2b;
+    --primary: #7c3aed;
+    --primary-light: #a78bfa;
+    --text-main: #f1f1ff;
+    --text-muted: #a1a1c2;
+    --border: rgba(255,255,255,0.08);
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--bg-main);
+    color: var(--text-main);
+    min-height: 100vh;
+}
+
+/* subtle grid background */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(124,58,237,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124,58,237,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: -1;
+}
+
+/* HERO */
+.hero {
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.hero h1 {
+    font-size: 42px;
+    margin-bottom: 15px;
+    color: var(--primary-light);
+}
+
+.hero p {
+    font-size: 18px;
+    color: var(--text-muted);
+}
+
+/* GRID */
+.features-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+}
+
+/* CARD */
+.feature-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 30px;
+    text-align: center;
+    transition: all 0.25s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-8px);
+    background: var(--card-hover);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+/* ICON */
+.feature-icon {
+    font-size: 42px;
+    margin-bottom: 15px;
+}
+
+/* TEXT */
+.feature-card h3 {
+    color: var(--primary-light);
+    margin-bottom: 10px;
+    font-size: 22px;
+}
+
+.feature-card p {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+/* BUTTON */
+.feature-btn {
+    display: inline-block;
+    padding: 10px 22px;
+    background: var(--primary);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 13px;
+    transition: all 0.2s ease;
+}
+
+.feature-btn:hover {
+    background: #6d28d9;
+    transform: scale(1.05);
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 30px;
+    }
+
+    .hero p {
+        font-size: 15px;
+    }
+}
+</style>
 </head>
 <body>
     <?php include_once 'includes/navigation.php'; ?>

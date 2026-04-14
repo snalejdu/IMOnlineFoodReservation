@@ -19,36 +19,216 @@ $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <title>Menu Items - Food Ordering System</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f4f4; }
-        .container { max-width: 1400px; margin: 20px auto; padding: 20px; }
-        .content-card { background: white; border-radius: 10px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
-        .btn { padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease; }
-        .btn-primary { background: #28a745; color: white; }
-        .btn-primary:hover { background: #218838; transform: translateY(-2px); }
-        .btn-warning { background: #ffc107; color: #333; }
-        .btn-warning:hover { background: #e0a800; }
-        .btn-danger { background: #dc3545; color: white; }
-        .btn-danger:hover { background: #c82333; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background: #667eea; color: white; font-weight: 600; }
-        tr:hover { background: #f5f5f5; }
-        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; display: inline-block; }
-        .status-available { background: #28a745; color: white; }
-        .status-unavailable { background: #dc3545; color: white; }
-        .action-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
-        .search-box { padding: 10px; width: 300px; border: 1px solid #ddd; border-radius: 5px; }
-        .stats { background: #e9ecef; padding: 10px 15px; border-radius: 5px; margin-bottom: 20px; }
-        @media (max-width: 768px) {
-            .container { padding: 10px; }
-            .header-actions { flex-direction: column; align-items: stretch; }
-            .search-box { width: 100%; }
-            table { font-size: 12px; }
-            th, td { padding: 8px; }
-        }
-    </style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #0b0b12;
+    --card: #141420;
+    --card2: #1b1b2b;
+    --primary: #7c3aed;
+    --primary-light: #a78bfa;
+    --text: #f1f1ff;
+    --muted: #a1a1c2;
+    --border: rgba(255,255,255,0.08);
+    --green: #22c55e;
+    --red: #ef4444;
+    --amber: #f59e0b;
+}
+
+/* BODY */
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* BACKGROUND GRID */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(124,58,237,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124,58,237,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+}
+
+/* CONTAINER */
+.container {
+    max-width: 1400px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+/* CARD */
+.content-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+/* HEADER */
+.header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+h2 {
+    color: var(--primary-light);
+    font-size: 22px;
+}
+
+/* BUTTONS */
+.btn {
+    padding: 10px 16px;
+    text-decoration: none;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+/* PRIMARY */
+.btn-primary {
+    background: var(--primary);
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #6d28d9;
+    transform: translateY(-2px);
+}
+
+/* WARNING */
+.btn-warning {
+    background: rgba(245,158,11,0.15);
+    color: #fbbf24;
+    border: 1px solid rgba(245,158,11,0.3);
+}
+
+.btn-warning:hover {
+    background: rgba(245,158,11,0.25);
+}
+
+/* DANGER */
+.btn-danger {
+    background: rgba(239,68,68,0.15);
+    color: #f87171;
+    border: 1px solid rgba(239,68,68,0.3);
+}
+
+.btn-danger:hover {
+    background: rgba(239,68,68,0.25);
+}
+
+/* STATS */
+.stats {
+    background: var(--card2);
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    margin-bottom: 15px;
+    color: var(--muted);
+}
+
+/* SEARCH */
+.search-box {
+    width: 300px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    outline: none;
+}
+
+.search-box:focus {
+    border-color: var(--primary);
+}
+
+/* TABLE */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+th {
+    background: var(--card2);
+    color: var(--primary-light);
+    text-align: left;
+    padding: 12px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+td {
+    padding: 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 13px;
+}
+
+tr:hover td {
+    background: rgba(124,58,237,0.06);
+}
+
+/* ITEM NAME */
+td strong {
+    color: var(--text);
+}
+
+/* STATUS BADGES */
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.status-available {
+    background: rgba(34,197,94,0.15);
+    color: #4ade80;
+    border: 1px solid rgba(34,197,94,0.3);
+}
+
+.status-unavailable {
+    background: rgba(239,68,68,0.15);
+    color: #f87171;
+    border: 1px solid rgba(239,68,68,0.3);
+}
+
+/* ACTION BUTTONS */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .container { padding: 10px; }
+    .header-actions { flex-direction: column; align-items: stretch; }
+    .search-box { width: 100%; }
+    table { font-size: 12px; }
+    th, td { padding: 8px; }
+}
+</style>
 </head>
 <body>
     <?php include_once dirname(__DIR__) . '/includes/navigation.php'; ?>

@@ -36,19 +36,123 @@ include_once dirname(__DIR__) . '/includes/breadcrumb.php';
 <html>
 <head>
     <title>Add Menu Item - Food Ordering System</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f4f4; }
-        .container { max-width: 800px; margin: 20px auto; padding: 20px; }
-        .form-card { background: white; border-radius: 10px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: bold; color: #555; }
-        input, textarea, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
-        button { background: #28a745; color: white; padding: 12px 25px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; }
-        button:hover { background: #218838; }
-        .btn-cancel { background: #6c757d; margin-left: 10px; text-decoration: none; display: inline-block; text-align: center; padding: 12px 25px; border-radius: 5px; color: white; }
-        h2 { margin-bottom: 20px; color: #333; }
-    </style>
+   <style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --bg-main: #0b0b12;
+    --card-bg: #141420;
+    --card-hover: #1c1c2b;
+    --primary: #7c3aed;
+    --primary-light: #a78bfa;
+    --text-main: #f1f1ff;
+    --text-muted: #a1a1c2;
+    --border: rgba(255,255,255,0.08);
+}
+
+/* BODY */
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--bg-main);
+    color: var(--text-main);
+}
+
+/* CONTAINER */
+.container {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+/* CARD */
+.form-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+/* TITLE */
+h2 {
+    margin-bottom: 20px;
+    color: var(--primary-light);
+}
+
+/* FORM GROUP */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* LABEL */
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+/* INPUTS */
+input, textarea, select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    background: #0f0f1a;
+    color: var(--text-main);
+    outline: none;
+    transition: 0.2s;
+}
+
+/* INPUT FOCUS */
+input:focus, textarea:focus, select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 1px var(--primary);
+}
+
+/* BUTTON */
+button {
+    background: var(--primary);
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #6d28d9;
+    transform: translateY(-1px);
+}
+
+/* CANCEL BUTTON */
+.btn-cancel {
+    background: #2a2a3d;
+    margin-left: 10px;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    padding: 12px 25px;
+    border-radius: 8px;
+    color: var(--text-main);
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.btn-cancel:hover {
+    background: #3a3a55;
+}
+
+/* SELECT OPTION FIX (for readability) */
+select option {
+    background: #0f0f1a;
+    color: var(--text-main);
+}
+</style>
 </head>
 <body>
     <?php include_once dirname(__DIR__) . '/includes/navigation.php'; ?>

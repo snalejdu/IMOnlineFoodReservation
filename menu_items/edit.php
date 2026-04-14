@@ -45,19 +45,149 @@ include_once dirname(__DIR__) . '/includes/breadcrumb.php';
 <html>
 <head>
     <title>Edit Menu Item - Food Ordering System</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f4f4; }
-        .container { max-width: 800px; margin: 20px auto; padding: 20px; }
-        .form-card { background: white; border-radius: 10px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: bold; color: #555; }
-        input, textarea, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
-        button { background: #ffc107; color: #333; padding: 12px 25px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; }
-        button:hover { background: #e0a800; }
-        .btn-cancel { background: #6c757d; margin-left: 10px; text-decoration: none; display: inline-block; text-align: center; padding: 12px 25px; border-radius: 5px; color: white; }
-        h2 { margin-bottom: 20px; color: #333; }
-    </style>
+   <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #0b0b12;
+    --card: #141420;
+    --card2: #1c1c2b;
+    --primary: #7c3aed;
+    --primary-light: #a78bfa;
+    --text: #f1f1ff;
+    --muted: #a1a1c2;
+    --border: rgba(255,255,255,0.08);
+    --warning: #fbbf24;
+    --danger: #ef4444;
+}
+
+/* BODY */
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* GRID BACKGROUND */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(124,58,237,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124,58,237,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+}
+
+/* CONTAINER */
+.container {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+/* FORM CARD */
+.form-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+/* TITLE */
+h2 {
+    margin-bottom: 20px;
+    color: var(--primary-light);
+    font-size: 22px;
+}
+
+/* FORM GROUP */
+.form-group {
+    margin-bottom: 18px;
+}
+
+/* LABEL */
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+/* INPUTS */
+input, textarea, select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: #0f0f1a;
+    color: var(--text);
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s;
+}
+
+/* FOCUS */
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(124,58,237,0.2);
+}
+
+/* TEXTAREA */
+textarea {
+    resize: vertical;
+}
+
+/* BUTTON (UPDATE) */
+button {
+    background: var(--warning);
+    color: #111;
+    padding: 12px 22px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #f59e0b;
+    transform: translateY(-1px);
+}
+
+/* CANCEL BUTTON */
+.btn-cancel {
+    background: #2a2a3d;
+    margin-left: 10px;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    padding: 12px 22px;
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.btn-cancel:hover {
+    background: #3a3a55;
+}
+
+/* SELECT OPTIONS FIX */
+select option {
+    background: #0f0f1a;
+    color: var(--text);
+}
+</style>
 </head>
 <body>
     <?php include_once dirname(__DIR__) . '/includes/navigation.php'; ?>
